@@ -5,7 +5,6 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  workflow_call:
 
 jobs:
   test-lin:
@@ -14,15 +13,82 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.13"
-      - name: Run py tests
-        run: python tests.python
+          python-version: ["3.12", "3.13"]
+      
+      - name: Try to run tests
+        run: |
+          # Проверяем разные варианты запуска
+          if [ -f "tests.py" ]; then
+            echo "Running tests.py"
+            python tests.py -v
+          elif [ -f "tests.python" ]; then
+            echo "Running tests.python"
+            python tests.python -v
+          elif [ -f "test.py" ]; then
+            echo "Running test.py"
+            python test.py -v
+          else
+            echo "Looking for test files..."
+            find . -name "*test*.py" -type f | head -5
+            echo "No test file found!"
+            exit 2
+          fi
+      
+      - name: Test summary
+        run: |
+          echo "## Linux Test Results" >> $GITHUB_STEP_SUMMARY
+          if steps.tests.outcome == 'success'; then
+            echo "All tests passed on Linux" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Tests failed on Linux" >> $GITHUB_STEP_SUMMARY
+          fi
+
   test-win:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.13"
-      - name: Run py tests
-        run: python tests.python
+          python-version: ["3.12", "3.13"]
+      
+      - name: Try to run tests on Windows
+        shell: pwsh
+        run: |
+          # Проверяем разные варианты запуска на Windows
+          if (Test-Path "tests.py") {
+            echo "Running tests.py"
+            python tests.py -v
+          } elseif (Test-Path "tests.python") {
+            echo "Running tests.python"
+            python tests.python -v
+          } elseif (Test-Path "test.py") {
+            echo "Running test.py"
+            python test.py -v
+          } else {
+            echo "Looking for test files..."
+            Get-ChildItem -Recurse -Filter "*test*.py" | Select-Object -First 5
+            echo "No test file found!"
+            exit 2
+          }
+      
+      - name: Windows test summary
+        run: |
+          echo "## Windows Test Results" >> $GITHUB_STEP_SUMMARY
+          if steps.tests_win.outcome == 'success'; then
+            echo "All tests passed on Windows" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Tests failed on Windows" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  summary:
+    needs: [test-lin, test-win]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All summary
+        run: |
+          echo "# Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Platform | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | ${{ needs.test-lin.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Windows | ${{ needs.test-win.result }} |" >> $GITHUB_STEP_SUMMARY
