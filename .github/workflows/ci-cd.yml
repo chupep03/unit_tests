@@ -71,11 +71,11 @@ jobs:
       
       - name: Windows test summary
         run: |
-          echo "## Windows Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Windows Test Results" >> $env:GITHUB_STEP_SUMMARY
           if ( "${{ steps.tests_win.outcome }}" -eq 'success' ) {
-            echo "All tests passed on Windows" >> $GITHUB_STEP_SUMMARY
+            echo "All tests passed on Windows" >> $env:GITHUB_STEP_SUMMARY
           } else {
-            echo "Tests failed on Windows" >> $GITHUB_STEP_SUMMARY
+            echo "Tests failed on Windows" >> $env:GITHUB_STEP_SUMMARY
           }
 
   summary:
