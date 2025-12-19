@@ -7,10 +7,10 @@ from triangle import area as triangle_area, perimeter as triangle_perimeter
 class TriangleTests(unittest.TestCase):
     def test_positive_good_perimeter(self):
         res = triangle_perimeter(10, 20, 15)
-        self.assertEqual(res, 60)
+        self.assertEqual(res, 45)
     def test_positive_good_area(self):
-        res = triangle_area(10, 20, 30)
-        self.assertEqual(res, (10*15*20)**0.5)
+        res = triangle_area(20, 40, 30) 
+        self.assertEqual(res, (25*5*15)**0.5)
     
     def test_negative_good_perimeter(self):
         with self.assertRaises(ValueError):

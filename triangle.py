@@ -8,7 +8,7 @@ def area(a, b, c):
         S (float) - площадь треугольника 
     """
     p = (a+b+c)/2
-    return ((p-a)(p-b)(p-c))**0.5
+    return ((p-a)*(p-b)*(p-c))**0.5
 
 def perimeter(a, b, c):
     """

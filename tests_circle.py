@@ -15,7 +15,7 @@ class CircleTests(unittest.TestCase):
     
     def test_perimeter_positive_radius(self):
         res = circle_perimeter(10)
-        self.assertEqual(math.pi * 10, res)
+        self.assertEqual(2* math.pi * 10, res)
     def test_perimeter_negative_radius(self):
         with self.assertRaises(ValueError):
             circle_perimeter(10)
