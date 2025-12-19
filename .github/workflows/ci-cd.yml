@@ -17,7 +17,6 @@ jobs:
       
       - name: Try to run tests
         run: |
-          # Проверяем разные варианты запуска
           if [ -f "tests.py" ]; then
             echo "Running tests.py"
             python tests.py
@@ -54,7 +53,6 @@ jobs:
       - name: Try to run tests on Windows
         shell: pwsh
         run: |
-          # Проверяем разные варианты запуска на Windows
           if (Test-Path "tests.py") {
             echo "Running tests.py"
             python tests.py
@@ -74,11 +72,11 @@ jobs:
       - name: Windows test summary
         run: |
           echo "## Windows Test Results" >> $GITHUB_STEP_SUMMARY
-          if (( "${{ steps.tests_win.outcome }}" -eq 'success' ); then
+          if (( "${{ steps.tests_win.outcome }}" -eq 'success' ) {
             echo "All tests passed on Windows" >> $GITHUB_STEP_SUMMARY
-          else
+          } else {
             echo "Tests failed on Windows" >> $GITHUB_STEP_SUMMARY
-          fi
+          }
 
   summary:
     needs: [test-lin, test-win]
