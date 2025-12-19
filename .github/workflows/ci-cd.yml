@@ -74,7 +74,7 @@ jobs:
       - name: Windows test summary
         run: |
           echo "## Windows Test Results" >> $GITHUB_STEP_SUMMARY
-          if [ steps.tests_win.outcome == 'success' ]; then
+          if (( "${{ steps.tests_win.outcome }}" -eq 'success' ); then
             echo "All tests passed on Windows" >> $GITHUB_STEP_SUMMARY
           else
             echo "Tests failed on Windows" >> $GITHUB_STEP_SUMMARY
