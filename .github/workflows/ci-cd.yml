@@ -20,13 +20,13 @@ jobs:
           # Проверяем разные варианты запуска
           if [ -f "tests.py" ]; then
             echo "Running tests.py"
-            python tests.py -v
+            python tests.py
           elif [ -f "tests.python" ]; then
             echo "Running tests.python"
-            python tests.python -v
+            python tests.python
           elif [ -f "test.py" ]; then
             echo "Running test.py"
-            python test.py -v
+            python test.py
           else
             echo "Looking for test files..."
             find . -name "*test*.py" -type f | head -5
@@ -37,7 +37,7 @@ jobs:
       - name: Test summary
         run: |
           echo "## Linux Test Results" >> $GITHUB_STEP_SUMMARY
-          if (steps.tests.outcome) == 'success'; then
+          if [ steps.tests.outcome == 'success' ]; then
             echo "All tests passed on Linux" >> $GITHUB_STEP_SUMMARY
           else
             echo "Tests failed on Linux" >> $GITHUB_STEP_SUMMARY
@@ -57,10 +57,10 @@ jobs:
           # Проверяем разные варианты запуска на Windows
           if (Test-Path "tests.py") {
             echo "Running tests.py"
-            python tests.py -v
+            python tests.py
           } elseif (Test-Path "tests.python") {
             echo "Running tests.python"
-            python tests.python -v
+            python tests.python
           } elseif (Test-Path "test.py") {
             echo "Running test.py"
             python test.py -v
@@ -74,7 +74,7 @@ jobs:
       - name: Windows test summary
         run: |
           echo "## Windows Test Results" >> $GITHUB_STEP_SUMMARY
-          if (steps.tests_win.outcome) == 'success'; then
+          if [ steps.tests_win.outcome == 'success' ]; then
             echo "All tests passed on Windows" >> $GITHUB_STEP_SUMMARY
           else
             echo "Tests failed on Windows" >> $GITHUB_STEP_SUMMARY
